@@ -2,6 +2,8 @@
 
 :root {
   --page: #fafafa;
+  --sheet: #ffffff;
+  --overlay: rgb(0 0 0 / 0.4);
   --surface: #efefef;
   --ink: #0b0b0b;
   --muted: #555555;
@@ -15,11 +17,13 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --page: #0b0b0b;
-    --surface: #1c1c1c;
+    --sheet: #1a1a1a;
+    --overlay: rgb(0 0 0 / 0.7);
+    --surface: #2c2c2c;
     --ink: #fafafa;
     --muted: #a3a3a3;
     --faint: #6e6e6e;
-    --line: #333333;
+    --line: #3d3d3d;
     --accent: #4d63ff;
     --on-accent: #ffffff;
     --negative: #ff6b5e;
@@ -29,6 +33,8 @@
 @theme inline {
   --font-sans: 'Archivo', system-ui, sans-serif;
   --color-page: var(--page);
+  --color-sheet: var(--sheet);
+  --color-overlay: var(--overlay);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
