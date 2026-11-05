@@ -10,6 +10,8 @@
   --tint: #007aff;
   --positive: #34c759;
   --negative: #ff3b30;
+  --fill: rgb(118 118 128 / 0.12);
+  --segment-selected: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +24,8 @@
     --tint: #0a84ff;
     --positive: #30d158;
     --negative: #ff453a;
+    --fill: rgb(118 118 128 / 0.24);
+    --segment-selected: #636366;
   }
 }
 
@@ -36,6 +40,16 @@
   --color-tint: var(--tint);
   --color-positive: var(--positive);
   --color-negative: var(--negative);
+  --color-fill: var(--fill);
+  --color-segment-selected: var(--segment-selected);
+
+  --animate-sheet-up: sheet-up 0.25s ease-out;
+
+  @keyframes sheet-up {
+    from {
+      transform: translateY(100%);
+    }
+  }
 }
 
 html {
