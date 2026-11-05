@@ -72,8 +72,7 @@ export function AccountSheet({ account, onClose }: Props) {
       <Label htmlFor={nameId}>Name</Label>
       <input
         id={nameId}
-        className="w-full border-b-2 border-line bg-transparent py-2 text-[24px] font-extrabold outline-none placeholder:font-medium placeholder:text-faint focus:border-ink"
-        placeholder="BPI Savings"
+        className="w-full border-b-2 border-line bg-transparent py-2 text-[24px] font-extrabold outline-none focus:border-ink"
         value={name}
         onChange={(e) => setName(e.target.value)}
         autoFocus={!account}
