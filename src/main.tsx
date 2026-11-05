@@ -7,6 +7,9 @@ import '@fontsource/archivo/latin-ext-500.css'
 import '@fontsource/archivo/latin-ext-800.css'
 import './index.css'
 
+// iOS Safari only applies :active on touch when a touchstart listener exists.
+document.addEventListener('touchstart', () => {}, { passive: true })
+
 // Without this, iOS may clear IndexedDB when the device runs low on storage.
 navigator.storage?.persist?.()
 

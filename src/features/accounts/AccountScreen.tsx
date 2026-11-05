@@ -77,14 +77,14 @@ export function AccountScreen({ uuid }: { uuid: string }) {
       <div className="mt-6 flex flex-wrap gap-2">
         <button
           type="button"
-          className="h-11 rounded-full bg-accent px-5 text-[15px] font-medium text-on-accent active:opacity-80"
+          className="h-11 rounded-full bg-accent px-5 text-[15px] font-medium text-on-accent"
           onClick={() => setSheet({ kind: 'transaction' })}
         >
           Add transaction
         </button>
         <button
           type="button"
-          className="h-11 rounded-full bg-surface px-5 text-[15px] font-medium active:opacity-80"
+          className="h-11 rounded-full bg-surface px-5 text-[15px] font-medium"
           onClick={() => setSheet({ kind: 'adjust' })}
         >
           Adjust balance
@@ -104,7 +104,7 @@ export function AccountScreen({ uuid }: { uuid: string }) {
                 <li key={item.uuid}>
                   <button
                     type="button"
-                    className="flex w-full items-start justify-between gap-3 py-3 text-left active:opacity-60"
+                    className="flex w-full items-start justify-between gap-3 py-3 text-left"
                     onClick={() =>
                       setSheet({ kind: 'transaction', transaction: item })
                     }

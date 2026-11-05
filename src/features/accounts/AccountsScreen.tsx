@@ -17,7 +17,7 @@ export function AccountsScreen() {
         <button
           type="button"
           aria-label="Add account"
-          className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent active:opacity-80"
+          className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent"
           onClick={() => setIsAdding(true)}
         >
           <svg
@@ -50,7 +50,7 @@ export function AccountsScreen() {
             <li key={account.uuid}>
               <a
                 href={`#/accounts/${account.uuid}`}
-                className="flex items-end justify-between gap-3 py-2.5 active:opacity-60"
+                className="flex items-end justify-between gap-3 py-2.5"
               >
                 <div className="min-w-0">
                   <div className="text-[13px] font-medium text-muted">
