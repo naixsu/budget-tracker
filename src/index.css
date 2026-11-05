@@ -5,6 +5,7 @@
   --sheet: #ffffff;
   --overlay: rgb(0 0 0 / 0.4);
   --surface: #efefef;
+  --stripe: #f0f0f0;
   --ink: #0b0b0b;
   --muted: #555555;
   --faint: #8a8a8a;
@@ -20,6 +21,7 @@
     --sheet: #1a1a1a;
     --overlay: rgb(0 0 0 / 0.7);
     --surface: #2c2c2c;
+    --stripe: #181818;
     --ink: #fafafa;
     --muted: #a3a3a3;
     --faint: #6e6e6e;
@@ -36,6 +38,7 @@
   --color-sheet: var(--sheet);
   --color-overlay: var(--overlay);
   --color-surface: var(--surface);
+  --color-stripe: var(--stripe);
   --color-ink: var(--ink);
   --color-muted: var(--muted);
   --color-faint: var(--faint);

@@ -37,14 +37,14 @@ export function AccountScreen({ uuid }: { uuid: string }) {
 
   return (
     <main className="mx-auto max-w-xl px-6 pb-12">
-      <header className="mt-3 flex h-11 items-center justify-between">
+      <header className="mt-2 flex h-11 items-center justify-between">
         <a
           href="#"
-          className="-ml-1 flex h-11 items-center gap-1 pr-2 text-[15px] font-medium text-muted"
+          className="-ml-1 flex h-11 items-center gap-1 pr-2 text-[17px] font-medium"
         >
           <svg
-            width="16"
-            height="16"
+            width="20"
+            height="20"
             viewBox="0 0 16 16"
             fill="none"
             stroke="currentColor"
@@ -59,7 +59,7 @@ export function AccountScreen({ uuid }: { uuid: string }) {
         </a>
         <button
           type="button"
-          className="h-11 pl-2 text-[15px] font-medium text-muted"
+          className="h-11 pl-2 text-[17px] font-medium"
           onClick={() => setSheet({ kind: 'account' })}
         >
           Edit

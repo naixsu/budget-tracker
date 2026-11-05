@@ -108,7 +108,7 @@ export function Sheet({
             </h2>
             <button
               type="button"
-              className="h-11 text-[15px] font-medium"
+              className="h-11 text-[17px] font-medium"
               onClick={() => setIsClosing(true)}
             >
               {closeLabel}

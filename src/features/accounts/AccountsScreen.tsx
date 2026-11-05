@@ -16,8 +16,7 @@ export function AccountsScreen() {
 
   return (
     <main className="mx-auto max-w-xl px-6 pb-12">
-      <header className="mt-3 flex h-11 items-center justify-between">
-        <span className="text-[15px] font-medium text-muted">Total</span>
+      <header className="mt-2 flex h-11 items-center justify-end">
         <div className="flex gap-2">
           <button
             type="button"
@@ -59,6 +58,7 @@ export function AccountsScreen() {
         </div>
       </header>
 
+      <p className="mt-4 text-[15px] font-medium text-muted">Total</p>
       <BigPesos
         className="mt-1"
         centavos={accounts.reduce((sum, a) => sum + a.balance, 0)}
@@ -69,12 +69,12 @@ export function AccountsScreen() {
           No accounts yet. Tap + to add your first one.
         </p>
       ) : (
-        <ul className="mt-12 flex flex-col gap-2">
+        <ul className="mt-10 -mx-4">
           {accounts.map((account) => (
-            <li key={account.uuid}>
+            <li key={account.uuid} className="rounded-2xl odd:bg-stripe">
               <a
                 href={`#/accounts/${account.uuid}`}
-                className="flex items-end justify-between gap-3 py-2.5"
+                className="flex items-end justify-between gap-3 px-4 py-4"
               >
                 <div className="min-w-0">
                   <div className="text-[13px] font-medium text-muted">
