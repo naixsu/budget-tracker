@@ -88,13 +88,15 @@ export function AccountSheet({ account, onClose }: Props) {
         value={balanceInput}
         onChange={setBalanceInput}
       />
-      <Hint isError={openingBalance === null}>
-        {openingBalance === null
-          ? 'Enter an amount like 1,234.56'
-          : account
-            ? 'What the account had before the first transaction logged here.'
-            : 'How much is in it right now.'}
-      </Hint>
+      {openingBalance === null ? (
+        <Hint isError>Enter an amount like 1,234.56</Hint>
+      ) : (
+        account && (
+          <Hint>
+            What the account had before the first transaction logged here.
+          </Hint>
+        )
+      )}
 
       <SubmitButton disabled={!canSave}>Save</SubmitButton>
       {account && (
