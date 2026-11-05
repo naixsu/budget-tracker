@@ -1,47 +1,42 @@
 @import 'tailwindcss';
 
-/* iOS system colors, so the app blends in with built-in apps. */
 :root {
-  --bg-grouped: #f2f2f7;
-  --bg-cell: #ffffff;
-  --label: #000000;
-  --label-secondary: rgb(60 60 67 / 0.6);
-  --separator: rgb(60 60 67 / 0.29);
-  --tint: #007aff;
-  --positive: #34c759;
-  --negative: #ff3b30;
-  --fill: rgb(118 118 128 / 0.12);
-  --segment-selected: #ffffff;
+  --page: #fafafa;
+  --surface: #efefef;
+  --ink: #0b0b0b;
+  --muted: #555555;
+  --faint: #8a8a8a;
+  --line: #d4d4d4;
+  --accent: #2346ff;
+  --on-accent: #ffffff;
+  --negative: #c4271b;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg-grouped: #000000;
-    --bg-cell: #1c1c1e;
-    --label: #ffffff;
-    --label-secondary: rgb(235 235 245 / 0.6);
-    --separator: rgb(84 84 88 / 0.65);
-    --tint: #0a84ff;
-    --positive: #30d158;
-    --negative: #ff453a;
-    --fill: rgb(118 118 128 / 0.24);
-    --segment-selected: #636366;
+    --page: #0b0b0b;
+    --surface: #1c1c1c;
+    --ink: #fafafa;
+    --muted: #a3a3a3;
+    --faint: #6e6e6e;
+    --line: #333333;
+    --accent: #4d63ff;
+    --on-accent: #ffffff;
+    --negative: #ff6b5e;
   }
 }
 
 @theme inline {
-  --font-sans:
-    -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
-  --color-grouped: var(--bg-grouped);
-  --color-cell: var(--bg-cell);
-  --color-label: var(--label);
-  --color-label-secondary: var(--label-secondary);
-  --color-separator: var(--separator);
-  --color-tint: var(--tint);
-  --color-positive: var(--positive);
+  --font-sans: 'Archivo', system-ui, sans-serif;
+  --color-page: var(--page);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
   --color-negative: var(--negative);
-  --color-fill: var(--fill);
-  --color-segment-selected: var(--segment-selected);
 
   --animate-sheet-up: sheet-up 0.25s ease-out;
 
@@ -59,7 +54,7 @@ html {
 }
 
 body {
-  @apply bg-grouped text-label font-sans antialiased;
+  @apply bg-page text-ink font-sans antialiased;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
 }

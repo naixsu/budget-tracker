@@ -10,56 +10,64 @@ export function AccountsScreen() {
 
   if (!accounts) return null
 
-  const total = accounts.reduce((sum, a) => sum + a.balance, 0)
+  const total = formatPesos(accounts.reduce((sum, a) => sum + a.balance, 0))
+  const dot = total.lastIndexOf('.')
 
   return (
-    <main className="mx-auto max-w-xl px-4 pb-10">
-      <header className="flex h-11 items-center justify-end">
+    <main className="mx-auto max-w-xl px-6 pb-12">
+      <header className="mt-3 flex h-11 items-center justify-between">
+        <span className="text-[15px] font-medium text-muted">Total</span>
         <button
           type="button"
-          className="text-[17px] text-tint"
+          aria-label="Add account"
+          className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent active:opacity-80"
           onClick={() => setEditing('new')}
         >
-          Add
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M10 3v14M3 10h14" />
+          </svg>
         </button>
       </header>
 
-      <h1 className="text-[34px] leading-tight font-bold tracking-tight">
-        Accounts
-      </h1>
-
-      <p className="mt-1 text-[15px] text-label-secondary">
-        Total{' '}
-        <span className="font-semibold text-label tabular-nums">
-          {formatPesos(total)}
-        </span>
+      <p className="mt-1 text-[min(52px,13vw)] leading-none font-extrabold tracking-[-0.04em] tabular-nums">
+        {total.slice(0, dot)}
+        <span className="text-faint">{total.slice(dot)}</span>
       </p>
 
       {accounts.length === 0 ? (
-        <p className="mt-6 rounded-[10px] bg-cell px-4 py-3 text-label-secondary">
-          No accounts yet. Tap Add to create one.
+        <p className="mt-14 text-[17px] text-muted">
+          No accounts yet. Tap + to add your first one.
         </p>
       ) : (
-        <ul className="mt-6 overflow-hidden rounded-[10px] bg-cell">
+        <ul className="mt-12 flex flex-col gap-2">
           {accounts.map((account) => (
-            <li key={account.uuid} className="group">
+            <li key={account.uuid}>
               <button
                 type="button"
-                className="w-full pl-4 text-left active:bg-separator/30"
+                className="flex w-full items-end justify-between gap-3 py-2.5 text-left active:opacity-60"
                 onClick={() => setEditing(account)}
               >
-                <div className="flex items-center gap-3 border-b-[0.5px] border-separator py-2.5 pr-4 group-last:border-b-0">
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-[17px]">{account.name}</div>
-                    <div className="text-[13px] text-label-secondary">
-                      {accountTypeLabels[account.type]}
-                    </div>
+                <div className="min-w-0">
+                  <div className="text-[13px] font-medium text-muted">
+                    {accountTypeLabels[account.type]}
                   </div>
-                  <div
-                    className={`text-[17px] tabular-nums ${account.balance < 0 ? 'text-negative' : ''}`}
-                  >
-                    {formatPesos(account.balance)}
+                  <div className="mt-0.5 truncate text-[24px] font-extrabold tracking-[-0.02em]">
+                    {account.name}
                   </div>
+                </div>
+                <div
+                  className={`shrink-0 text-[20px] font-medium tabular-nums ${account.balance < 0 ? 'text-negative' : ''}`}
+                >
+                  {formatPesos(account.balance)}
                 </div>
               </button>
             </li>

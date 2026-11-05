@@ -12,12 +12,16 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.png', 'apple-touch-icon.png'],
+      workbox: {
+        // Default only precaches js/css/html; fonts must work offline too.
+        globPatterns: ['**/*.{js,css,html,woff2}'],
+      },
       manifest: {
         name: 'Budget',
         short_name: 'Budget',
         display: 'standalone',
-        background_color: '#f2f2f7',
-        theme_color: '#f2f2f7',
+        background_color: '#fafafa',
+        theme_color: '#fafafa',
         icons: [
           { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },

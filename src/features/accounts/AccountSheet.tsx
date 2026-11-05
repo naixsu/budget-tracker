@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useId, useState, type FormEvent } from 'react'
 import type { Account, AccountType } from '../../db/db'
 import { centavosToInput, parsePesos } from '../../money'
 import {
@@ -16,6 +16,8 @@ interface Props {
 const accountTypes = Object.keys(accountTypeLabels) as AccountType[]
 
 export function AccountSheet({ account, onClose }: Props) {
+  const nameId = useId()
+  const balanceId = useId()
   const [name, setName] = useState(account?.name ?? '')
   const [type, setType] = useState<AccountType>(account?.type ?? 'bank')
   const [balanceInput, setBalanceInput] = useState(
@@ -54,40 +56,44 @@ export function AccountSheet({ account, onClose }: Props) {
     <div className="fixed inset-0 z-10 flex items-end bg-black/40">
       <form
         onSubmit={handleSubmit}
-        className="mx-auto max-h-[92dvh] w-full max-w-xl animate-sheet-up overflow-y-auto rounded-t-[10px] bg-grouped px-4 pb-[max(env(safe-area-inset-bottom),1.5rem)]"
+        className="mx-auto max-h-[92dvh] w-full max-w-xl animate-sheet-up overflow-y-auto rounded-t-[20px] bg-page px-6 pb-[max(env(safe-area-inset-bottom),1.5rem)]"
       >
-        <header className="flex h-14 items-center justify-between text-[17px]">
-          <button type="button" className="text-tint" onClick={onClose}>
-            Cancel
-          </button>
-          <h2 className="font-semibold">
-            {account ? 'Edit Account' : 'New Account'}
+        <header className="flex h-16 items-center justify-between">
+          <h2 className="text-[24px] font-extrabold tracking-[-0.02em]">
+            {account ? 'Edit account' : 'New account'}
           </h2>
           <button
-            type="submit"
-            className="font-semibold text-tint disabled:opacity-30"
-            disabled={!canSave}
+            type="button"
+            className="h-11 text-[15px] font-medium text-muted"
+            onClick={onClose}
           >
-            Save
+            Cancel
           </button>
         </header>
 
-        <div className="overflow-hidden rounded-[10px] bg-cell">
-          <input
-            className="w-full bg-transparent px-4 py-3 text-[17px] outline-none placeholder:text-label-secondary"
-            placeholder="Name, e.g. BPI Savings"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            autoFocus={!account}
-          />
-        </div>
+        <label
+          htmlFor={nameId}
+          className="mt-4 block text-[13px] font-medium text-muted"
+        >
+          Name
+        </label>
+        <input
+          id={nameId}
+          className="w-full border-b-2 border-line bg-transparent py-2 text-[24px] font-extrabold outline-none placeholder:font-medium placeholder:text-faint focus:border-ink"
+          placeholder="BPI Savings"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          autoFocus={!account}
+        />
 
-        <div className="mt-6 flex rounded-lg bg-fill p-0.5">
+        <p className="mt-8 text-[13px] font-medium text-muted">Type</p>
+        <div className="mt-2 flex gap-2">
           {accountTypes.map((t) => (
             <button
               key={t}
               type="button"
-              className={`flex-1 rounded-[7px] py-1.5 text-[13px] font-medium ${t === type ? 'bg-segment-selected shadow-sm' : ''}`}
+              aria-pressed={t === type}
+              className={`h-11 rounded-full px-5 text-[15px] font-medium ${t === type ? 'bg-ink text-page' : 'bg-surface'}`}
               onClick={() => setType(t)}
             >
               {accountTypeLabels[t]}
@@ -95,32 +101,46 @@ export function AccountSheet({ account, onClose }: Props) {
           ))}
         </div>
 
-        <p className="mt-6 px-4 pb-1.5 text-[13px] text-label-secondary uppercase">
+        <label
+          htmlFor={balanceId}
+          className="mt-8 block text-[13px] font-medium text-muted"
+        >
           Starting balance
-        </p>
-        <div className="flex items-center overflow-hidden rounded-[10px] bg-cell px-4">
-          <span className="text-[17px] text-label-secondary">₱</span>
+        </label>
+        <div className="flex items-baseline border-b-2 border-line focus-within:border-ink">
+          <span className="text-[32px] font-extrabold text-faint">₱</span>
           <input
-            className="w-full bg-transparent py-3 pl-1 text-[17px] tabular-nums outline-none placeholder:text-label-secondary"
+            id={balanceId}
+            className="w-full bg-transparent py-2 pl-1 text-[32px] font-extrabold tabular-nums outline-none placeholder:text-faint"
             placeholder="0.00"
             inputMode="decimal"
             value={balanceInput}
             onChange={(e) => setBalanceInput(e.target.value)}
           />
         </div>
-        <p className="px-4 pt-1.5 text-[13px] text-label-secondary">
+        <p
+          className={`mt-2 text-[13px] ${openingBalance === null ? 'text-negative' : 'text-muted'}`}
+        >
           {openingBalance === null
             ? 'Enter an amount like 1,234.56'
             : 'What the account has right now. Later changes go in as transactions.'}
         </p>
 
+        <button
+          type="submit"
+          className="mt-10 h-14 w-full rounded-full bg-accent text-[17px] font-medium text-on-accent disabled:opacity-40"
+          disabled={!canSave}
+        >
+          Save
+        </button>
+
         {account && (
           <button
             type="button"
-            className="mt-8 w-full rounded-[10px] bg-cell py-3 text-[17px] text-negative"
+            className="mt-2 h-12 w-full text-[15px] font-medium text-negative"
             onClick={handleDelete}
           >
-            Delete Account
+            Delete account
           </button>
         )}
       </form>
