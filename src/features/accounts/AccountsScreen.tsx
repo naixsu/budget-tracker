@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { BigPesos } from '../../components/BigPesos'
+import { Sheet } from '../../components/Sheet'
+import { BackupSection } from '../backup/BackupSection'
 import { formatPesos } from '../../money'
 import { AccountSheet } from './AccountSheet'
 import { accountTypeLabels, useAccountsWithBalances } from './accounts'
@@ -7,6 +9,7 @@ import { accountTypeLabels, useAccountsWithBalances } from './accounts'
 export function AccountsScreen() {
   const accounts = useAccountsWithBalances()
   const [isAdding, setIsAdding] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
 
   if (!accounts) return null
 
@@ -14,25 +17,45 @@ export function AccountsScreen() {
     <main className="mx-auto max-w-xl px-6 pb-12">
       <header className="mt-3 flex h-11 items-center justify-between">
         <span className="text-[15px] font-medium text-muted">Total</span>
-        <button
-          type="button"
-          aria-label="Add account"
-          className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent"
-          onClick={() => setIsAdding(true)}
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            aria-hidden="true"
+        <div className="flex gap-2">
+          <button
+            type="button"
+            aria-label="Settings"
+            className="flex size-11 items-center justify-center rounded-full bg-surface"
+            onClick={() => setIsSettingsOpen(true)}
           >
-            <path d="M10 3v14M3 10h14" />
-          </svg>
-        </button>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <circle cx="4" cy="10" r="1.75" />
+              <circle cx="10" cy="10" r="1.75" />
+              <circle cx="16" cy="10" r="1.75" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            aria-label="Add account"
+            className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent"
+            onClick={() => setIsAdding(true)}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              aria-hidden="true"
+            >
+              <path d="M10 3v14M3 10h14" />
+            </svg>
+          </button>
+        </div>
       </header>
 
       <BigPesos
@@ -72,6 +95,15 @@ export function AccountsScreen() {
       )}
 
       {isAdding && <AccountSheet onClose={() => setIsAdding(false)} />}
+      {isSettingsOpen && (
+        <Sheet
+          title="Settings"
+          closeLabel="Done"
+          onClose={() => setIsSettingsOpen(false)}
+        >
+          <BackupSection />
+        </Sheet>
+      )}
     </main>
   )
 }

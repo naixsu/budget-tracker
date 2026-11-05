@@ -10,14 +10,21 @@ import {
 interface Props {
   title: string
   onClose: () => void
-  onSubmit: () => void | Promise<void>
+  onSubmit?: () => void | Promise<void>
+  closeLabel?: string
   children: ReactNode
 }
 
 const closeDistance = 120
 const closeVelocity = 0.5 // px per ms
 
-export function Sheet({ title, onClose, onSubmit, children }: Props) {
+export function Sheet({
+  title,
+  onClose,
+  onSubmit,
+  closeLabel = 'Cancel',
+  children,
+}: Props) {
   const [dragY, setDragY] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const [isClosing, setIsClosing] = useState(false)
@@ -25,7 +32,7 @@ export function Sheet({ title, onClose, onSubmit, children }: Props) {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault()
-    void onSubmit()
+    void onSubmit?.()
   }
 
   function handlePointerDown(event: PointerEvent) {
@@ -104,7 +111,7 @@ export function Sheet({ title, onClose, onSubmit, children }: Props) {
               className="h-11 text-[15px] font-medium"
               onClick={() => setIsClosing(true)}
             >
-              Cancel
+              {closeLabel}
             </button>
           </header>
         </div>
