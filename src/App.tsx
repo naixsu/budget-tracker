@@ -6,7 +6,9 @@ import { useHash } from './useHash'
 export function App() {
   const hash = useHash()
 
-  useEffect(() => window.scrollTo(0, 0), [hash])
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [hash])
 
   const accountUuid = hash.match(/^#\/accounts\/(.+)$/)?.[1]
   if (accountUuid) {
