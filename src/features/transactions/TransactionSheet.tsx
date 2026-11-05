@@ -133,9 +133,6 @@ export function TransactionSheet({ accountUuid, transaction, onClose }: Props) {
         onChange={setAmountInput}
         autoFocus={!transaction}
       />
-      {amountInput.trim() !== '' && amount === null && (
-        <Hint isError>Enter an amount above zero, like 1,234.56</Hint>
-      )}
 
       {isTransfer && (
         <>

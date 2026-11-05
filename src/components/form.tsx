@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { sanitizeAmountInput } from '../money'
 
 export function Label({
   htmlFor,
@@ -38,11 +39,13 @@ export function AmountInput({
   value,
   onChange,
   autoFocus,
+  allowNegative = false,
 }: {
   id: string
   value: string
   onChange: (value: string) => void
   autoFocus?: boolean
+  allowNegative?: boolean
 }) {
   return (
     <div className="flex items-baseline border-b-2 border-line focus-within:border-ink">
@@ -52,8 +55,13 @@ export function AmountInput({
         className="w-full bg-transparent py-2 pl-1 text-[32px] font-extrabold tabular-nums outline-none placeholder:text-faint"
         placeholder="0.00"
         inputMode="decimal"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) =>
+          onChange(sanitizeAmountInput(e.target.value, allowNegative))
+        }
         autoFocus={autoFocus}
       />
     </div>

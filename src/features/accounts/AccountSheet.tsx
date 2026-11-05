@@ -106,15 +106,12 @@ export function AccountSheet({ account, onClose }: Props) {
         id={balanceId}
         value={balanceInput}
         onChange={setBalanceInput}
+        allowNegative
       />
-      {openingBalance === null ? (
-        <Hint isError>Enter an amount like 1,234.56</Hint>
-      ) : (
-        account && (
-          <Hint>
-            What the account had before the first transaction logged here.
-          </Hint>
-        )
+      {account && (
+        <Hint>
+          What the account had before the first transaction logged here.
+        </Hint>
       )}
 
       <SubmitButton disabled={!canSave}>Save</SubmitButton>

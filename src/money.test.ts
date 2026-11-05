@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { centavosToInput, formatPesos, parsePesos } from './money'
+import {
+  centavosToInput,
+  formatPesos,
+  parsePesos,
+  sanitizeAmountInput,
+} from './money'
 
 describe('parsePesos', () => {
   it.each([
@@ -28,6 +33,25 @@ describe('formatPesos', () => {
   it('formats centavos as pesos', () => {
     expect(formatPesos(123456)).toBe('₱1,234.56')
     expect(formatPesos(-500)).toBe('-₱5.00')
+  })
+})
+
+describe('sanitizeAmountInput', () => {
+  it.each([
+    ['asd', ''],
+    ['12a3', '123'],
+    ['1,234.56', '1,234.56'],
+    ['1.2.3', '1.23'],
+    ['1.234', '1.23'],
+    ['5.', '5.'],
+    ['-50', '50'],
+  ])('%j -> %j', (input, expected) => {
+    expect(sanitizeAmountInput(input, false)).toBe(expected)
+  })
+
+  it('keeps a leading minus only when allowed', () => {
+    expect(sanitizeAmountInput('-50', true)).toBe('-50')
+    expect(sanitizeAmountInput('5-0', true)).toBe('50')
   })
 })
 

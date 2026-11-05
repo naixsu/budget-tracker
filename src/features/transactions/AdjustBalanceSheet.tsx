@@ -29,7 +29,7 @@ export function AdjustBalanceSheet({ accountUuid, balance, onClose }: Props) {
     onClose()
   }
 
-  let hint = 'Enter an amount like 1,234.56'
+  let hint = ''
   if (difference === 0) {
     hint = 'Matches the balance here. Nothing to adjust.'
   } else if (difference !== null) {
@@ -39,8 +39,14 @@ export function AdjustBalanceSheet({ accountUuid, balance, onClose }: Props) {
   return (
     <Sheet title="Adjust balance" onClose={onClose} onSubmit={handleSubmit}>
       <Label htmlFor={inputId}>Actual balance, from your bank app</Label>
-      <AmountInput id={inputId} value={input} onChange={setInput} autoFocus />
-      <Hint isError={difference === null}>{hint}</Hint>
+      <AmountInput
+        id={inputId}
+        value={input}
+        onChange={setInput}
+        autoFocus
+        allowNegative
+      />
+      {hint && <Hint>{hint}</Hint>}
 
       <SubmitButton disabled={!difference}>Adjust</SubmitButton>
     </Sheet>

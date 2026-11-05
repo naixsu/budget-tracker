@@ -22,6 +22,15 @@ export function parsePesos(input: string): number | null {
   return sign ? -centavos : centavos
 }
 
+// Keeps an amount field to digits, commas, one dot and two decimals,
+// so there is never anything invalid to show an error for.
+export function sanitizeAmountInput(input: string, allowNegative: boolean) {
+  const sign = allowNegative && input.trimStart().startsWith('-') ? '-' : ''
+  const [whole, ...rest] = input.replace(/[^\d.,]/g, '').split('.')
+  const fraction = rest.length > 0 ? `.${rest.join('').slice(0, 2)}` : ''
+  return `${sign}${whole}${fraction}`
+}
+
 export function centavosToInput(centavos: number) {
   return (centavos / 100).toFixed(2)
 }
