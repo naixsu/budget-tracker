@@ -1,2 +1,9 @@
 *.md
 !README.md
+
+node_modules
+dist
+*.local
+.env*
+*.log
+.DS_Store
