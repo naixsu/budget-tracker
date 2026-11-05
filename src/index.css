@@ -1,0 +1,51 @@
+@import 'tailwindcss';
+
+/* iOS system colors, so the app blends in with built-in apps. */
+:root {
+  --bg-grouped: #f2f2f7;
+  --bg-cell: #ffffff;
+  --label: #000000;
+  --label-secondary: rgb(60 60 67 / 0.6);
+  --separator: rgb(60 60 67 / 0.29);
+  --tint: #007aff;
+  --positive: #34c759;
+  --negative: #ff3b30;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-grouped: #000000;
+    --bg-cell: #1c1c1e;
+    --label: #ffffff;
+    --label-secondary: rgb(235 235 245 / 0.6);
+    --separator: rgb(84 84 88 / 0.65);
+    --tint: #0a84ff;
+    --positive: #30d158;
+    --negative: #ff453a;
+  }
+}
+
+@theme inline {
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  --color-grouped: var(--bg-grouped);
+  --color-cell: var(--bg-cell);
+  --color-label: var(--label);
+  --color-label-secondary: var(--label-secondary);
+  --color-separator: var(--separator);
+  --color-tint: var(--tint);
+  --color-positive: var(--positive);
+  --color-negative: var(--negative);
+}
+
+html {
+  color-scheme: light dark;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  @apply bg-grouped text-label font-sans antialiased;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
