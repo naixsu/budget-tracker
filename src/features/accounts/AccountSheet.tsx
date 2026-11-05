@@ -15,7 +15,12 @@ import {
   addAccount,
   deleteAccount,
   updateAccount,
+  useAccountsWithBalances,
 } from './accounts'
+
+function normalizeName(name: string) {
+  return name.trim().replace(/\s+/g, ' ').toLowerCase()
+}
 
 interface Props {
   account?: Account
@@ -36,14 +41,26 @@ export function AccountSheet({ account, onClose }: Props) {
     account ? centavosToInput(account.openingBalance) : '',
   )
 
+  const accounts = useAccountsWithBalances()
+
+  const trimmedName = name.trim().replace(/\s+/g, ' ')
+  const isDuplicate = (accounts ?? []).some(
+    (a) =>
+      a.uuid !== account?.uuid &&
+      normalizeName(a.name) === normalizeName(trimmedName),
+  )
   const openingBalance =
     balanceInput.trim() === '' ? 0 : parsePesos(balanceInput)
-  const canSave = name.trim() !== '' && openingBalance !== null
+  const canSave =
+    trimmedName !== '' &&
+    !isDuplicate &&
+    accounts !== undefined &&
+    openingBalance !== null
 
   async function handleSubmit() {
     if (!canSave) return
 
-    const draft = { name: name.trim(), type, openingBalance }
+    const draft = { name: trimmedName, type, openingBalance }
     if (account) {
       await updateAccount(account.uuid, draft)
     } else {
@@ -77,6 +94,9 @@ export function AccountSheet({ account, onClose }: Props) {
         onChange={(e) => setName(e.target.value)}
         autoFocus={!account}
       />
+      {isDuplicate && (
+        <Hint isError>You already have an account named {trimmedName}.</Hint>
+      )}
 
       <Label>Type</Label>
       <Pills options={typeOptions} value={type} onChange={setType} />
