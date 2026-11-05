@@ -99,12 +99,12 @@ export function AccountScreen({ uuid }: { uuid: string }) {
             <h2 className="text-[13px] font-medium text-muted">
               {formatDay(day.date)}
             </h2>
-            <ul>
+            <ul className="mt-1 -mx-4">
               {day.items.map((item) => (
-                <li key={item.uuid}>
+                <li key={item.uuid} className="rounded-2xl odd:bg-stripe">
                   <button
                     type="button"
-                    className="flex w-full items-start justify-between gap-3 py-3 text-left"
+                    className="flex w-full items-start justify-between gap-3 px-4 py-3 text-left"
                     onClick={() =>
                       setSheet({ kind: 'transaction', transaction: item })
                     }
