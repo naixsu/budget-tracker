@@ -1,17 +1,14 @@
 import { useState } from 'react'
-import type { Account } from '../../db/db'
+import { BigPesos } from '../../components/BigPesos'
 import { formatPesos } from '../../money'
 import { AccountSheet } from './AccountSheet'
 import { accountTypeLabels, useAccountsWithBalances } from './accounts'
 
 export function AccountsScreen() {
   const accounts = useAccountsWithBalances()
-  const [editing, setEditing] = useState<Account | 'new' | null>(null)
+  const [isAdding, setIsAdding] = useState(false)
 
   if (!accounts) return null
-
-  const total = formatPesos(accounts.reduce((sum, a) => sum + a.balance, 0))
-  const dot = total.lastIndexOf('.')
 
   return (
     <main className="mx-auto max-w-xl px-6 pb-12">
@@ -21,7 +18,7 @@ export function AccountsScreen() {
           type="button"
           aria-label="Add account"
           className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent active:opacity-80"
-          onClick={() => setEditing('new')}
+          onClick={() => setIsAdding(true)}
         >
           <svg
             width="20"
@@ -38,10 +35,10 @@ export function AccountsScreen() {
         </button>
       </header>
 
-      <p className="mt-1 text-[min(52px,13vw)] leading-none font-extrabold tracking-[-0.04em] tabular-nums">
-        {total.slice(0, dot)}
-        <span className="text-faint">{total.slice(dot)}</span>
-      </p>
+      <BigPesos
+        className="mt-1"
+        centavos={accounts.reduce((sum, a) => sum + a.balance, 0)}
+      />
 
       {accounts.length === 0 ? (
         <p className="mt-14 text-[17px] text-muted">
@@ -51,10 +48,9 @@ export function AccountsScreen() {
         <ul className="mt-12 flex flex-col gap-2">
           {accounts.map((account) => (
             <li key={account.uuid}>
-              <button
-                type="button"
-                className="flex w-full items-end justify-between gap-3 py-2.5 text-left active:opacity-60"
-                onClick={() => setEditing(account)}
+              <a
+                href={`#/accounts/${account.uuid}`}
+                className="flex items-end justify-between gap-3 py-2.5 active:opacity-60"
               >
                 <div className="min-w-0">
                   <div className="text-[13px] font-medium text-muted">
@@ -69,18 +65,13 @@ export function AccountsScreen() {
                 >
                   {formatPesos(account.balance)}
                 </div>
-              </button>
+              </a>
             </li>
           ))}
         </ul>
       )}
 
-      {editing && (
-        <AccountSheet
-          account={editing === 'new' ? undefined : editing}
-          onClose={() => setEditing(null)}
-        />
-      )}
+      {isAdding && <AccountSheet onClose={() => setIsAdding(false)} />}
     </main>
   )
 }
