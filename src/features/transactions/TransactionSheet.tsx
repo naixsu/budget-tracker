@@ -168,7 +168,7 @@ export function TransactionSheet({ accountUuid, transaction, onClose }: Props) {
       <input
         id={noteId}
         className="w-full border-b-2 border-line bg-transparent py-2 text-[17px] font-medium outline-none placeholder:text-faint focus:border-ink"
-        placeholder={isTransfer ? 'Optional' : 'Groceries, salary, load…'}
+        placeholder="Optional"
         value={note}
         onChange={(e) => setNote(e.target.value)}
       />
