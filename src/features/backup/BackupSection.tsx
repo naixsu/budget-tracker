@@ -2,6 +2,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { useRef, useState, type ChangeEvent } from 'react'
 import { formatDay, toDateString } from '../../dates'
 import { db } from '../../db/db'
+import { requestSync } from '../../sync/autoSync'
+import { resetPush } from '../../sync/sync'
 import { exportBackup, parseBackup, restoreBackup } from './backup'
 
 type Status = { message: string; isError: boolean } | null
@@ -32,6 +34,10 @@ export function BackupSection() {
     setStatus(null)
     try {
       const counts = await restoreBackup(parseBackup(await file.text()))
+      if (counts.accounts + counts.transactions > 0) {
+        await resetPush()
+        void requestSync()
+      }
       setStatus({
         message:
           counts.accounts + counts.transactions === 0
@@ -52,7 +58,7 @@ export function BackupSection() {
     typeof lastExported?.value === 'number' ? lastExported.value : null
 
   return (
-    <section className="mt-4">
+    <section className="mt-10">
       <h2 className="text-[13px] font-medium text-muted">Backup</h2>
       <p className="mt-1 text-[17px] font-medium">
         {lastExportedAt === null

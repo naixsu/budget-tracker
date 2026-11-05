@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BigPesos } from '../../components/BigPesos'
 import { Sheet } from '../../components/Sheet'
+import { SyncSection } from '../../sync/SyncSection'
 import { BackupSection } from '../backup/BackupSection'
 import { formatPesos } from '../../money'
 import { AccountSheet } from './AccountSheet'
@@ -101,6 +102,7 @@ export function AccountsScreen() {
           closeLabel="Done"
           onClose={() => setIsSettingsOpen(false)}
         >
+          <SyncSection />
           <BackupSection />
         </Sheet>
       )}
