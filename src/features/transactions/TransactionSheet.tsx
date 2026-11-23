@@ -143,7 +143,7 @@ export function TransactionSheet({ accountUuid, transaction, onClose }: Props) {
             <Pills
               options={otherAccounts.map((a) => ({
                 value: a.uuid,
-                label: a.name,
+                label: a.parentName ? `${a.name} (${a.parentName})` : a.name,
               }))}
               value={counterpartUuid}
               onChange={setCounterpartUuid}

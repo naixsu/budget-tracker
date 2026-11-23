@@ -1,7 +1,11 @@
 import 'fake-indexeddb/auto'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { db } from '../db/db'
-import { addAccount, updateAccount } from '../features/accounts/accounts'
+import {
+  addAccount,
+  addLinkedCategory,
+  updateAccount,
+} from '../features/accounts/accounts'
 import { addTransfer } from '../features/transactions/transactions'
 import code from '../../apps-script/Code.gs?raw'
 import { connectSync, disconnectSync, sync } from './sync'
@@ -15,10 +19,11 @@ interface Table {
 }
 
 // Runs the real merge logic from the Apps Script, outside Google.
-const { mergeTable_, TABLES } = new Function(
-  `${code}; return { mergeTable_, TABLES }`,
+const { mergeTable_, normalize_, TABLES } = new Function(
+  `${code}; return { mergeTable_, normalize_, TABLES }`,
 )() as {
   TABLES: Record<'accounts' | 'transactions', Table>
+  normalize_: (table: Table, raw: unknown) => Record<string, unknown>
   mergeTable_: (
     table: Table,
     rows: StoredRow[],
@@ -196,6 +201,41 @@ describe('sync', () => {
     await sync()
 
     expect((await db.transactions.toArray())[0]).toEqual(stored)
+  })
+
+  it('keeps a linked category intact through the sheet', async () => {
+    await addAccount({ name: 'RCBC', type: 'bank', openingBalance: 5000000 })
+    const rcbc = (await db.accounts.toArray())[0]
+    await addLinkedCategory({
+      name: 'Emergency',
+      parentUuid: rcbc.uuid,
+      amount: 1000000,
+    })
+    await sync()
+    const stored = await db.accounts.orderBy('sortOrder').toArray()
+
+    await db.accounts.clear()
+    await db.meta.delete('serverCursor')
+    await sync()
+
+    expect(await db.accounts.orderBy('sortOrder').toArray()).toEqual(stored)
+    expect(stored[1].parentUuid).toBe(rcbc.uuid)
+    expect(stored[0]).not.toHaveProperty('parentUuid')
+  })
+
+  it('reads an empty parentUuid cell as no parent', () => {
+    const record = normalize_(TABLES.accounts, {
+      uuid: 'a',
+      name: 'BPI',
+      type: 'bank',
+      openingBalance: '0',
+      sortOrder: '0',
+      createdAt: '1',
+      updatedAt: '1',
+      isDeleted: 'false',
+      parentUuid: '',
+    })
+    expect(record).not.toHaveProperty('parentUuid')
   })
 
   it('reports a wrong token', async () => {

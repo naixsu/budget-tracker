@@ -34,3 +34,8 @@ the token are refused, so keep the token private.
 
 To update the script later, paste the new code, then Deploy -> Manage
 deployments -> Edit -> Version: New version. The URL stays the same.
+
+Linked categories need the updated script. Until it is deployed, the sheet
+drops the link, so another device sees a category as a separate account. The new
+script adds the `parentUuid` column to an existing `accounts` tab on its
+first sync.

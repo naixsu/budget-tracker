@@ -9,7 +9,7 @@ import {
   type HistoryItem,
 } from '../transactions/transactions'
 import { AccountSheet } from './AccountSheet'
-import { accountTypeLabels } from './accounts'
+import { accountTypeLabels, useAccountsWithBalances } from './accounts'
 
 type OpenSheet =
   | { kind: 'account' }
@@ -25,15 +25,20 @@ function describe(item: HistoryItem) {
 
 export function AccountScreen({ uuid }: { uuid: string }) {
   const data = useAccountHistory(uuid)
+  const accounts = useAccountsWithBalances()
   const [sheet, setSheet] = useState<OpenSheet | null>(null)
 
   useEffect(() => {
     if (data === null) window.location.hash = ''
   }, [data])
 
-  if (!data) return null
+  if (!data || !accounts) return null
 
   const { account, balance, days } = data
+  const parentName = accounts.find((a) => a.uuid === uuid)?.parentName
+  const categories = accounts.filter((a) => a.parentUuid === uuid)
+  // What the bank app shows, so adjusting compares against this.
+  const totalBalance = categories.reduce((s, c) => s + c.balance, balance)
 
   return (
     <main className="mx-auto max-w-xl px-6 pb-12">
@@ -72,7 +77,40 @@ export function AccountScreen({ uuid }: { uuid: string }) {
       <h1 className="text-[32px] leading-tight font-extrabold tracking-[-0.02em] break-words">
         {account.name}
       </h1>
-      <BigPesos className="mt-3" centavos={balance} />
+      {parentName && (
+        <p className="text-[15px] font-medium text-muted">
+          Linked to {parentName}
+        </p>
+      )}
+      <BigPesos className="mt-3" centavos={totalBalance} />
+
+      {categories.length > 0 && (
+        <ul className="mt-4">
+          <li className="flex justify-between gap-3 py-1 text-[15px] font-medium">
+            <span className="text-muted">Unassigned</span>
+            <span
+              className={`tabular-nums ${balance < 0 ? 'text-negative' : ''}`}
+            >
+              {formatPesos(balance)}
+            </span>
+          </li>
+          {categories.map((category) => (
+            <li key={category.uuid}>
+              <a
+                href={`#/accounts/${category.uuid}`}
+                className="flex justify-between gap-3 py-1 text-[15px] font-medium"
+              >
+                <span className="truncate">{category.name}</span>
+                <span
+                  className={`shrink-0 tabular-nums ${category.balance < 0 ? 'text-negative' : ''}`}
+                >
+                  {formatPesos(category.balance)}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="mt-6 flex flex-wrap gap-2">
         <button
@@ -144,7 +182,7 @@ export function AccountScreen({ uuid }: { uuid: string }) {
       {sheet?.kind === 'adjust' && (
         <AdjustBalanceSheet
           accountUuid={account.uuid}
-          balance={balance}
+          balance={totalBalance}
           onClose={() => setSheet(null)}
         />
       )}

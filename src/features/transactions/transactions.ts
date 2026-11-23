@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks'
 import { db, type Transaction } from '../../db/db'
+import { newRecord } from '../../db/records'
 
 export interface TransactionDraft {
   accountUuid: string
@@ -20,16 +21,6 @@ export interface HistoryItem extends Transaction {
   balanceAfter: number
   counterpartUuid?: string
   counterpartName?: string
-}
-
-function newRecord() {
-  const now = Date.now()
-  return {
-    uuid: crypto.randomUUID(),
-    createdAt: now,
-    updatedAt: now,
-    isDeleted: false,
-  }
 }
 
 export async function addTransaction(draft: TransactionDraft) {

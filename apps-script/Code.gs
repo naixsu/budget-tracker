@@ -15,6 +15,7 @@ const TABLES = {
       'createdAt',
       'updatedAt',
       'isDeleted',
+      'parentUuid',
     ],
     numbers: ['openingBalance', 'sortOrder', 'createdAt', 'updatedAt'],
     pesos: (record) => record.openingBalance / 100,
@@ -43,7 +44,23 @@ function setup() {
     props.setProperty('TOKEN', Utilities.getUuid())
   }
   Object.keys(TABLES).forEach(sheet_)
+  migrateAccountsV2()
   Logger.log('Token: ' + props.getProperty('TOKEN'))
+}
+
+// Columns are read by position, so older sheets need the new column
+// inserted before serverSeq.
+function migrateAccountsV2() {
+  const sheet = sheet_('accounts')
+  const current = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+  if (current.includes('parentUuid')) return
+
+  const headers = headers_(TABLES.accounts)
+  sheet.insertColumnBefore(TABLES.accounts.fields.indexOf('parentUuid') + 1)
+  sheet
+    .getRange(1, 1, 1, headers.length)
+    .setValues([headers])
+    .setFontWeight('bold')
 }
 
 function doPost(e) {
@@ -58,6 +75,7 @@ function doPost(e) {
     const lock = LockService.getScriptLock()
     lock.waitLock(30000)
     try {
+      migrateAccountsV2()
       let seq = Number(props.getProperty('SEQ')) || 0
       // A cursor from a different sheet would skip everything; start over.
       const cursor = Number(body.cursor) <= seq ? Number(body.cursor) || 0 : 0
@@ -98,7 +116,7 @@ function normalize_(table, raw) {
       record[field] = Number(value)
     } else if (field === 'isDeleted') {
       record[field] = value === true || value === 'true'
-    } else if (field === 'transferUuid') {
+    } else if (field === 'transferUuid' || field === 'parentUuid') {
       if (value) record[field] = String(value)
     } else {
       record[field] = value === undefined || value === null ? '' : String(value)
@@ -184,7 +202,9 @@ function writeRows_(table, sheet, rows) {
   const headers = headers_(table)
   const values = rows.map(({ record, serverSeq }) =>
     table.fields
-      .map((field) => (record[field] === undefined ? '' : String(record[field])))
+      .map((field) =>
+        record[field] === undefined ? '' : String(record[field]),
+      )
       .concat([String(serverSeq), table.pesos(record)]),
   )
   // Plain text everywhere except the pesos column, so Sheets doesn't turn

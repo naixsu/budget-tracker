@@ -4,6 +4,16 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
+export function newRecord() {
+  const now = Date.now()
+  return {
+    uuid: crypto.randomUUID(),
+    createdAt: now,
+    updatedAt: now,
+    isDeleted: false,
+  }
+}
+
 function hasSyncFields(r: Record<string, unknown>) {
   return (
     typeof r.uuid === 'string' &&
@@ -20,6 +30,8 @@ export function isAccount(value: unknown): value is Account {
     typeof value.name === 'string' &&
     ['bank', 'ewallet', 'cash'].includes(value.type as string) &&
     Number.isInteger(value.openingBalance) &&
+    (value.parentUuid === undefined ||
+      (typeof value.parentUuid === 'string' && value.parentUuid !== '')) &&
     typeof value.sortOrder === 'number'
   )
 }

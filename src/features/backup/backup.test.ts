@@ -1,7 +1,11 @@
 import 'fake-indexeddb/auto'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { db } from '../../db/db'
-import { addAccount, updateAccount } from '../accounts/accounts'
+import {
+  addAccount,
+  addLinkedCategory,
+  updateAccount,
+} from '../accounts/accounts'
 import { addTransaction } from '../transactions/transactions'
 import { createBackup, parseBackup, restoreBackup } from './backup'
 
@@ -44,6 +48,23 @@ describe('parseBackup', () => {
     ],
   ])('rejects %s', (text, message) => {
     expect(() => parseBackup(text)).toThrow(message)
+  })
+
+  it('accepts accounts with and without a parent', async () => {
+    const bpi = await seed()
+    await addLinkedCategory({ name: 'Rent', parentUuid: bpi.uuid, amount: 0 })
+    const backup = await createBackup()
+    expect(backup.accounts.map((a) => a.parentUuid)).toEqual(
+      expect.arrayContaining([undefined, bpi.uuid]),
+    )
+    expect(parseBackup(JSON.stringify(backup))).toEqual(backup)
+  })
+
+  it('rejects an empty parent', async () => {
+    await seed()
+    const backup = await createBackup()
+    backup.accounts[0].parentUuid = ''
+    expect(() => parseBackup(JSON.stringify(backup))).toThrow('damaged')
   })
 
   it('rejects fractional amounts', async () => {

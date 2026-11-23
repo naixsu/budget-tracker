@@ -7,6 +7,7 @@ export interface Account {
   name: string
   type: AccountType
   openingBalance: number
+  parentUuid?: string
   sortOrder: number
   createdAt: number
   updatedAt: number
